@@ -1,0 +1,122 @@
+
+# loader = TextLoader("../dataset/의료법(법률)(제19818호)(20240801).pdf")
+# ------------------------------------------------------------------------------
+(fastcampus) parkdongjae@bagdongjaes-MacBook-Pro codes % python3 test.py
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/text.py", line 43, in lazy_load
+    text = f.read()
+           ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can''t decode byte 0xe2 in position 10: invalid continuation byte
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/parkdongjae/UpstageAILab/qaengine/codes/test.py", line 11, in <module>
+    docs = loader.load()
+           ^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_core/document_loaders/base.py", line 30, in load
+    return list(self.lazy_load())
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/text.py", line 56, in lazy_load
+    raise RuntimeError(f"Error loading {self.file_path}") from e
+RuntimeError: Error loading ../dataset/의료법(법률)(제19818호)(20240801).pdf
+# ----------------------------------- 아래 문서를 참조해서 DirectoryLoader 사용으로 수정
+https://python.langchain.com/v0.2/docs/how_to/document_loader_directory/#auto-detect-file-encodings-with-textloader
+
+
+
+# loader = DirectoryLoader("../dataset", glob="*", show_progress=True)
+# ------------------------------------------------------------------------------
+(fastcampus) parkdongjae@bagdongjaes-MacBook-Pro codes % python3 test.py
+  0%|                                                                                                                     | 0/2 [00:00<?, ?it/s]Error loading file ../dataset/의료법(법률)(제19818호)(20240801).pdf
+ 50%|██████████████████████████████████████████████████████▌                                                      | 1/2 [00:00<00:00,  1.42it/s]Traceback (most recent call last):
+  File "/Users/parkdongjae/UpstageAILab/qaengine/codes/test.py", line 12, in <module>
+    docs = loader.load()
+           ^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 117, in load
+    return list(self.lazy_load())
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 195, in lazy_load
+    yield from self._lazy_load_file(i, p, pbar)
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 233, in _lazy_load_file
+    raise e
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 223, in _lazy_load_file
+    for subdoc in loader.lazy_load():
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/unstructured.py", line 107, in lazy_load
+    elements = self._get_elements()
+               ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/unstructured.py", line 228, in _get_elements
+    return partition(filename=self.file_path, **self.unstructured_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/partition/auto.py", line 186, in partition
+    file_type = detect_filetype(
+                ^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/file_utils/filetype.py", line 100, in detect_filetype
+    return _FileTypeDetector.file_type(ctx)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/file_utils/filetype.py", line 133, in file_type
+    return cls(ctx)._file_type
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/file_utils/filetype.py", line 143, in _file_type
+    if file_type := self._file_type_from_guessed_mime_type:
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/file_utils/filetype.py", line 183, in _file_type_from_guessed_mime_type
+    mime_type = self._ctx.mime_type
+                ^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/utils.py", line 187, in __get__
+    value = self._fget(obj)
+            ^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/file_utils/filetype.py", line 364, in mime_type
+    import magic
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/magic/__init__.py", line 209, in <module>
+    libmagic = loader.load_lib()
+               ^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/magic/loader.py", line 49, in load_lib
+    raise ImportError('failed to find libmagic.  Check your installation')
+ImportError: failed to find libmagic.  Check your installation
+ 50%|██████████████████████████████████████████████████████▌                                                      | 1/2 [00:00<00:00,  1.40it/s]
+ # ----------------------------------- 해결
+mac
+pip로 이미 실처되어 있지만 에러 발생함.
+brew로 libmagic 설치
+brew install libmagic
+
+
+
+# loader = DirectoryLoader("../dataset", glob="*", show_progress=True)
+# ------------------------------------------------------------------------------
+(fastcampus) parkdongjae@bagdongjaes-MacBook-Pro codes % python3 test.py
+  0%|                                                                                                                                                                                          | 0/2 [00:00<?, ?it/s]Error loading file ../dataset/의료법(법률)(제19818호)(20240801).pdf
+ 50%|█████████████████████████████████████████████████████████████████████████████████████████                                                                                         | 1/2 [00:00<00:00,  1.06it/s]Traceback (most recent call last):
+  File "/Users/parkdongjae/UpstageAILab/qaengine/codes/test.py", line 12, in <module>
+    docs = loader.load()
+           ^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 117, in load
+    return list(self.lazy_load())
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 195, in lazy_load
+    yield from self._lazy_load_file(i, p, pbar)
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 233, in _lazy_load_file
+    raise e
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/directory.py", line 223, in _lazy_load_file
+    for subdoc in loader.lazy_load():
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/unstructured.py", line 107, in lazy_load
+    elements = self._get_elements()
+               ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/langchain_community/document_loaders/unstructured.py", line 228, in _get_elements
+    return partition(filename=self.file_path, **self.unstructured_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/partition/auto.py", line 340, in partition
+    partition_pdf = partitioner_loader.get(file_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/partition/auto.py", line 527, in get
+    self._partitioners[file_type] = self._load_partitioner(file_type)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/fastcampus/lib/python3.12/site-packages/unstructured/partition/auto.py", line 536, in _load_partitioner
+    raise ImportError(
+ImportError: partition_pdf() is not available because one or more dependencies are not installed. Use: pip install "unstructured[pdf]" (including quotes) to install the required dependencies
+ 50%|█████████████████████████████████████████████████████████████████████████████████████████                                                                                         | 1/2 [00:00<00:00,  1.04it/s]
+(fastcampus) parkdongjae@bagdongjaes-MacBook-Pro codes % 
+ # ----------------------------------- 해결
+pip install "unstructured[pdf]"
