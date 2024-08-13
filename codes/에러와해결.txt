@@ -80,6 +80,7 @@ ImportError: failed to find libmagic.  Check your installation
 mac
 pip로 이미 실처되어 있지만 에러 발생함.
 brew로 libmagic 설치
+brew install libmagic
 
 
 
