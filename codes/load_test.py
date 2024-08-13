@@ -2,8 +2,7 @@ import os
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 
-api_key = "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"
-os.environ["OPENAI_API_KEY"] = api_key
+os.environ["OPENAI_API_KEY"]
 
 embed_model = OpenAIEmbeddings(api_key=api_key, model="text-embedding-3-small")
 

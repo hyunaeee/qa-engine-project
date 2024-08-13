@@ -1,18 +1,16 @@
 import os
 # from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
-from langchain_experimental.text_splitter import SemanticChunker
+# from langchain_experimental.text_splitter import SemanticChunker
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-
-api_key = "sk-"
-os.environ["OPENAI_API_KEY"] = api_key
+api_key = os.environ["OPENAI_API_KEY"]
 
 # Load Document
-# loader = TextLoader("../dataset/의료법(법률)(제19818호)(20240801).pdf") # TextLoader 
-loader = DirectoryLoader("../dataset", glob="*", show_progress=True)
+# loader = TextLoader("../dataset/광주지법 2000. 5. 19. 선고 2000노24 판결 _ 상고기각.pdf") # TextLoader 
+loader = DirectoryLoader("../dataset/판례", glob="*", show_progress=True)
 docs = loader.load()
 print(f"docs len : {len(docs)}")
 
@@ -31,7 +29,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 documents = text_splitter.split_documents(docs)
 print(f"documents len : {len(documents)}")
-print(documents[0])
+# print(documents[0])
 
 
 # Embedding / FAISS VectorStore / vector index save
